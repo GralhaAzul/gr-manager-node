@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import {} from 'node:crypto'
 import { excludePswd, excludePswdEntities } from '../utils/excludePwd.js'
+import { generateHash } from '../utils/hashProvider.js'
 
 const prisma = new PrismaClient()
 
@@ -48,11 +49,13 @@ export default class UserController {
       })
     }
 
+    const hashedPassword = await generateHash(password)
+
     await prisma.user.create({
       data: {
         name,
         user,
-        password
+        password: hashedPassword
       }
     })
 
@@ -76,11 +79,13 @@ export default class UserController {
       })
     }
 
+    const hashedPassword = await generateHash(newPassword)
+
     await prisma.user.update({
       where: { user },
       data: {
         name,
-        password: newPassword ? newPassword : user.password
+        password: newPassword ? hashedPassword : user.password
       }
     })
 

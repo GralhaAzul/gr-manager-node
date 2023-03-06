@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 import { excludePswd, excludePswdEntities } from '../utils/excludePwd.js'
+import { generateHash } from "../utils/hashProvider.js"
 
 const prisma = new PrismaClient()
 
@@ -40,12 +41,14 @@ export default class EmailController {
         error: "E-mail already exists."
       })
     }
+
+    const hashedPassword = await generateHash(password)
     
     await prisma.email.create({
       data: {
         name,
         email,
-        password
+        password: hashedPassword
       }
     })
 
@@ -55,7 +58,6 @@ export default class EmailController {
   }
 
   async delete(req, res) {
-    const { email } = req
     const { id } = req.params
 
     await prisma.email.delete({
@@ -96,12 +98,14 @@ export default class EmailController {
       })
     }
 
+    const hashedPassword = await generateHash(password)
+
     await prisma.email.update({
       where: {
         email
       },
       data: {
-        password
+        password: hashedPassword
       }
     })
     
