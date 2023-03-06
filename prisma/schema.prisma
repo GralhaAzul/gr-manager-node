@@ -18,3 +18,12 @@ model User {
 
   @@map("users")
 }
+
+model Email {
+  id Int @id @default(autoincrement())
+  email String @unique
+  password String
+  name String
+
+  @@map("emails")
+}

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import {} from 'node:crypto'
-import { excludePswdFromUser, excludePswdFromUsers } from '../utils/excludeUserPwd.js'
+import { excludePswd, excludePswdEntities } from '../utils/excludePwd.js'
 
 const prisma = new PrismaClient()
 
@@ -8,7 +8,7 @@ export default class UserController {
   async getUsers(req, res) {
     const users = await prisma.user.findMany({})
 
-    const usersWOPassword = excludePswdFromUsers(users, ['password'])
+    const usersWOPassword = excludePswdEntities(users, ['password'])
 
     res.json(usersWOPassword)
   }
@@ -28,7 +28,7 @@ export default class UserController {
       })
     }
 
-    const userWOPassword = excludePswdFromUser(userFind, ['password'])
+    const userWOPassword = excludePswd(userFind, ['password'])
 
     return res.status(200).json(userWOPassword)
   }
