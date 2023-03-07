@@ -6,5 +6,5 @@ export const generateHash = (payload) => {
 }
 
 export const compareHash = (payload, hashed) => {
-  return compare(payload, hash)
+  return compare(payload, hashed)
 }
